@@ -36,6 +36,7 @@ else:
 
 if nrReceptie == lastCell:
     nrCrotal = wb.range("E" + str(nrReceptie)).value
+    verificareCrotal = wb.range("E9" + ":E" + str(lastCell)).value
     if wb.range("K" + str(nrReceptie)).value is None:
         wb.range("K" + str(nrReceptie)).color = (235, 52, 52)
         ctypes.windll.user32.MessageBoxW(0, "Lipseste masina la pozitia:" + str(nrReceptie - 8),"Masina lipsa!", 0)
@@ -71,6 +72,7 @@ else:
     propietar = wb.range("H" + str(nrReceptie) + ":H" + str(lastCell)).value
     codExploatatie = wb.range("J" + str(nrReceptie) + ":J" + str(lastCell)).value
     localitate = wb.range("I" + str(nrReceptie) + ":I" + str(lastCell)).value
+    verificareCrotal = wb.range("E9" + ":E" + str(lastCell)).value
     nrCrotal = wb.range("E" + str(nrReceptie) + ":E" + str(lastCell)).value
     varsta = wb.range("G" + str(nrReceptie) + ":G" + str(lastCell)).value
     # Se verifica daca celulele sunt goale
@@ -102,6 +104,19 @@ else:
 doctor = int(xw.Book("C:\\Users\\CALITATE\\Desktop\\OVINA PUTTY.xls").sheets['Date'].range("E2").value)
 #organeCapre = False
 #organeOi = False
+
+# Verificare crotale duplicate
+
+for i in range(lastCell - 8):
+    for j in range(lastCell - 8):
+
+        if i == j:
+            pass
+        elif verificareCrotal[i] == verificareCrotal[j]:
+            ctypes.windll.user32.MessageBoxW(0, "Crotalul " + verificareCrotal[i] + " este duplicat la pozitia " + nrCriteriu[i] + " si pozitia " + nrCriteriu[j],
+                                             "Crotal duplicat", 0)
+            sys.exit()
+
 
 # Se selecteaza o celula goala pentru a evita o eroare
 wb.range("E1").select()
@@ -159,19 +174,19 @@ if nrReceptie == lastCell:
     pyautogui.press("enter")
     pyautogui.press("f2")
     time.sleep(1)
-    if nrCrotal[:3] == "RO2":
-        pyautogui.typewrite("10401")
+    #if nrCrotal[:3] == "RO2":
+    #    pyautogui.typewrite("10401")
         # organeCapre = True
-    else:
-        pyautogui.typewrite("10201")
+    #else:
+    pyautogui.typewrite("10201")
         # organeOi = True
     pyautogui.press("enter")
     pyautogui.typewrite(nrCrotal)
     pyautogui.press("enter")
     pyautogui.press("enter")
-    if nrCrotal[:3] == "RO2":
-        pyautogui.typewrite("F")
-        pyautogui.press("enter")
+    #if nrCrotal[:3] == "RO2":
+    #    pyautogui.typewrite("F")
+    #    pyautogui.press("enter")
     if varsta == ">18LUNI":
         pyautogui.typewrite("18+")
     elif varsta == "<18LUNI":
@@ -199,19 +214,19 @@ else:
     pyautogui.press("enter")
     pyautogui.press("f2")
     time.sleep(1)
-    if nrCrotal[0][:3] == "RO2":
-        pyautogui.typewrite("10401")
+    #if nrCrotal[0][:3] == "RO2":
+    #    pyautogui.typewrite("10401")
         #organeCapre = True
-    else:
-        pyautogui.typewrite("10201")
+    #else:
+    pyautogui.typewrite("10201")
         #organeOi = True
     pyautogui.press("enter")
     pyautogui.typewrite(nrCrotal[0])
     pyautogui.press("enter")
     pyautogui.press("enter")
-    if nrCrotal[0][:3] == "RO2":
-        pyautogui.typewrite("F")
-        pyautogui.press("enter")
+    #if nrCrotal[0][:3] == "RO2":
+    #    pyautogui.typewrite("F")
+    #    pyautogui.press("enter")
     if varsta[0] == ">18LUNI":
         pyautogui.typewrite("18+")
     elif varsta[0] == "<18LUNI":
@@ -250,19 +265,19 @@ else:
             pyautogui.press("enter")
             pyautogui.press("f2")
             time.sleep(1)
-            if nrCrotal[i][:3] == "RO2":
-                pyautogui.typewrite("10401")
+            #if nrCrotal[i][:3] == "RO2":
+            #    pyautogui.typewrite("10401")
                 # organeCapre = True
-            else:
-                pyautogui.typewrite("10201")
+            #else:
+            pyautogui.typewrite("10201")
                 # organeOi = True
             pyautogui.press("enter")
             pyautogui.typewrite(nrCrotal[i])
             pyautogui.press("enter")
             pyautogui.press("enter")
-            if nrCrotal[i][:3] == "RO2":
-                pyautogui.typewrite("F")
-                pyautogui.press("enter")
+            #if nrCrotal[i][:3] == "RO2":
+            #    pyautogui.typewrite("F")
+            #    pyautogui.press("enter")
             if varsta[i] == ">18LUNI":
                 pyautogui.typewrite("18+")
             elif varsta[i] == "<18LUNI":
@@ -275,19 +290,21 @@ else:
             propietarAnterior = propietar[i]
             nrArticole = nrArticole + 1
         else:
-            if nrCrotal[i][:3] == "RO2":
-                pyautogui.typewrite("10401")
+            #if nrCrotal[i][:3] == "RO2":
+            #    pyautogui.typewrite("10401")
                 # organeCapre = True
-            else:
-                pyautogui.typewrite("10201")
+            #else:
+            pyautogui.typewrite("10201")
                 # organeOi = True
             pyautogui.press("enter")
             pyautogui.typewrite(nrCrotal[i])
             pyautogui.press("enter")
             pyautogui.press("enter")
-            if nrCrotal[i][:3] == "RO2":
-                pyautogui.typewrite("F")
-                pyautogui.press("enter")
+            #if nrCrotal[i][:3] == "RO2":
+            #    pyautogui.typewrite("F")
+            #    pyautogui.press("enter")re
+            
+            
             if varsta[i] == ">18LUNI":
                 pyautogui.typewrite("18+")
             elif varsta[i] == "<18LUNI":
@@ -301,6 +318,7 @@ else:
             nrArticole = nrArticole + 1
     listaOF.append(nrArticole)
     pyautogui.press("f4")
+    time.sleep(5)
     pyautogui.press("d")
     time.sleep(1)
 
@@ -340,10 +358,10 @@ propietarAnterior = wb.range("H" + str(nrReceptie)).value
 
 if nrReceptie == lastCell:
     pyautogui.hotkey('ctrl', 'o')
-    if nrCrotal[:3] == "RO2":
-        pyautogui.typewrite("10401")
-    else:
-        pyautogui.typewrite("10201")
+    #if nrCrotal[:3] == "RO2":
+    #    pyautogui.typewrite("10401")
+    #else:
+    pyautogui.typewrite("10201")
     pyautogui.press("enter")
     pyautogui.typewrite(str(1))
     pyautogui.press("enter")
@@ -357,10 +375,10 @@ if nrReceptie == lastCell:
 
 else:
     pyautogui.hotkey('ctrl', 'o')
-    if nrCrotal[0][:3] == "RO2":
-        pyautogui.typewrite("10401")
-    else:
-        pyautogui.typewrite("10201")
+    #if nrCrotal[0][:3] == "RO2":
+    #    pyautogui.typewrite("10401")
+    #else:
+    pyautogui.typewrite("10201")
     pyautogui.press("enter")
     pyautogui.typewrite(str(listaOF[0]))
     pyautogui.press("enter")
@@ -382,10 +400,10 @@ else:
         if propietarAnterior != propietar[i]:
             listaOF.pop(0)
             pyautogui.hotkey('ctrl', 'o')
-            if nrCrotal[i][:3] == "RO2":
-                pyautogui.typewrite("10401")
-            else:
-                pyautogui.typewrite("10201")
+            #if nrCrotal[i][:3] == "RO2":
+            #    pyautogui.typewrite("10401")
+            #else:
+            pyautogui.typewrite("10201")
             pyautogui.press("enter")
             pyautogui.typewrite(str(listaOF[0]))
             pyautogui.press("enter")
@@ -421,3 +439,6 @@ else:
 app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
 pyautogui.press("enter")
 
+# Salvare fisier excel
+
+xw.Book("C:\\Users\\CALITATE\\Desktop\\OVINA PUTTY.xls").save()
