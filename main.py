@@ -7,6 +7,7 @@ from xlwings import Range, constants
 import pydirectinput
 from datetime import date
 import win32api, win32con
+import ctypes
 
 caleExcel = "C:\\Users\\CALITATE\\Desktop\\OVINA PUTTY.xls"
 calePutty = "C:\\vifout\\Putty\\putty.exe"
@@ -102,8 +103,13 @@ if nrReceptie == lastCell:
         sys.exit()
     else:
         varsta = wb.range("G" + str(nrReceptie)).value
+    if wb.range("M" + str(nrReceptie)).value is None:
+        wb.range("M" + str(nrReceptie)).color = (235, 52, 52)
+        ctypes.windll.user32.MessageBoxW(0, "Lipseste numarul de pasaport la pozitia:" + str(nrReceptie - 8), "Numar pasaport lispa!", 0)
+        sys.exit()
+    else:
+        masina = wb.range("M" + str(nrReceptie)).value
 else:
-    masina = wb.range("K" + str(nrReceptie) + ":K" + str(lastCell)).value
     propietar = wb.range("H" + str(nrReceptie) + ":H" + str(lastCell)).value
     codExploatatie = wb.range("J" + str(nrReceptie) + ":J" + str(lastCell)).value
     localitate = wb.range("I" + str(nrReceptie) + ":I" + str(lastCell)).value
@@ -111,6 +117,8 @@ else:
     nrCrotal = wb.range("E" + str(nrReceptie) + ":E" + str(lastCell)).value
     varsta = wb.range("G" + str(nrReceptie) + ":G" + str(lastCell)).value
     nrCriteriu = wb.range("B" + str(nrReceptie) + ":B" + str(lastCell)).value
+    masina = wb.range("K" + str(nrReceptie) + ":K" + str(lastCell)).value
+    nrPasaport = wb.range("M" + str(nrReceptie) + ":M" + str(lastCell)).value
     # Se verifica daca celulele sunt goale
     for i in range(len(masina)):
         if masina[i] is None:
@@ -147,6 +155,12 @@ else:
             wb.range("G" + str(nrReceptie + i)).color = (235, 52, 52)
             ctypes.windll.user32.MessageBoxW(0, "Lipseste varsta la pozitia:" + str(i + nrReceptie - 8),
                                              "Varsta lipsa!", 0)
+            sys.exit()
+    for i in range(len(nrPasaport)):
+        if nrPasaport[i] is None:
+            wb.range("M" + str(nrReceptie + i)).color = (235, 52, 52)
+            ctypes.windll.user32.MessageBoxW(0, "Lipseste numarul de pasaport la pozitia:" + str(i + nrReceptie - 8),
+                                             "Numar de pasaport lipsa!", 0)
             sys.exit()
     nrCriteriu = [int(nrCriteriu) for nrCriteriu in nrCriteriu]
 doctor = int(xw.Book(caleExcel).sheets[foaieCalculAutomat].range("E2").value)
@@ -207,6 +221,9 @@ if nrReceptie == lastCell:
     pyautogui.press("enter")
     pyautogui.typewrite(str(doctor))
     pyautogui.press("enter")
+    pyautogui.press("enter")
+    pyautogui.typewrite(nrPasaport)
+    pyautogui.press("enter")
     pyautogui.press("f2")
     time.sleep(1)
     # if nrCrotal[:3] == "RO2":
@@ -248,6 +265,9 @@ else:
     pyautogui.press("enter")
     pyautogui.typewrite(str(doctor))
     pyautogui.press("enter")
+    pyautogui.press("enter")
+    pyautogui.typewrite(nrPasaport[0])
+    pyautogui.press("enter")
     pyautogui.press("f2")
     time.sleep(1)
     pyautogui.typewrite("10201")
@@ -275,8 +295,14 @@ else:
             nrArticole = 0
             pyautogui.press("f4")
             pyautogui.press("d")
-            time.sleep(2)
-            app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+            time.sleep(5)
+            try:
+                app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+            except:
+                ctypes.windll.user32.MessageBoxW(0,
+                                                 "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
+                                                 "Eroare la inchidrea consolei!", 0)
+                sys.exit()
             pyautogui.press("enter")
 
             # Salvare nr criteriu in sheet-ul de date in cazul in care conexiunea la server este intrerupta
@@ -294,7 +320,9 @@ else:
             pyautogui.press('e')
             time.sleep(1)
 
-            pyautogui.hotkey('ctrl', 'o')
+            pyautogui.keyDown('ctrl')
+            pyautogui.press('o')
+            pyautogui.keyUp('ctrl')
             pyautogui.typewrite("10201")
             pyautogui.press("enter")
             pyautogui.typewrite(str(listaOF[0]))
@@ -310,7 +338,13 @@ else:
             listaCrotale.clear()
             listaOF.pop(0)
 
-            app.VIF5_7.child_window(title="Close", control_type="Button").click()
+            try:
+                app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+            except:
+                ctypes.windll.user32.MessageBoxW(0,
+                                                 "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
+                                                 "Eroare la inchidrea consolei!", 0)
+                sys.exit()
             pyautogui.press("enter")
 
             deschidereConsola("p01")
@@ -333,6 +367,9 @@ else:
             pyautogui.typewrite(localitate[i])
             pyautogui.press("enter")
             pyautogui.typewrite(str(doctor))
+            pyautogui.press("enter")
+            pyautogui.press("enter")
+            pyautogui.typewrite(nrPasaport[i])
             pyautogui.press("enter")
             pyautogui.press("f2")
             time.sleep(1)
@@ -373,14 +410,17 @@ else:
             listaCrotale.append(nrCrotal[i])
     listaOF.append(nrArticole)
     pyautogui.press("f4")
-    time.sleep(5)
     pyautogui.press("d")
-    time.sleep(1)
+    time.sleep(5)
 
 #Memorare in excel urmatoarea introducere
 xw.Book(caleExcel).sheets[foaieCalculAutomat].range("G3").value = lastCell - 7
 
-app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+try:
+    app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+except:
+    ctypes.windll.user32.MessageBoxW(0, "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif", "Eroare la inchidrea consolei!", 0)
+    sys.exit()
 pyautogui.press("enter")
 
 # Validare in p03
@@ -397,7 +437,9 @@ time.sleep(1)
 
 
 if nrReceptie == lastCell:
-    pyautogui.hotkey('ctrl', 'o')
+    pyautogui.keyDown('ctrl')
+    pyautogui.press('o')
+    pyautogui.keyUp('ctrl')
     pyautogui.typewrite("10201")
     pyautogui.press("enter")
     pyautogui.typewrite(str(1))
@@ -410,7 +452,9 @@ if nrReceptie == lastCell:
     pydirectinput.press("f2")
     time.sleep(1)
 else:
-    pyautogui.hotkey('ctrl', 'o')
+    pyautogui.keyDown('ctrl')
+    pyautogui.press('o')
+    pyautogui.keyUp('ctrl')
     pyautogui.typewrite("10201")
     pyautogui.press("enter")
     pyautogui.typewrite(str(listaOF[0]))
@@ -423,7 +467,11 @@ else:
         pydirectinput.press("f2")
         time.sleep(1)
 
-app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+try:
+    app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+except:
+    ctypes.windll.user32.MessageBoxW(0, "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif", "Eroare la inchidrea consolei!", 0)
+    sys.exit()
 pyautogui.press("enter")
 
 # Salvare fisier excel
