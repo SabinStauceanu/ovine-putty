@@ -188,6 +188,8 @@ listaOF = [
 listaCrotale = [
 ]
 nrArticole = 0
+crotalAnterior = ""
+crotalAnterior2 = ""
 
 # Se va apasa tasta capslock daca este on
 
@@ -226,19 +228,17 @@ if nrReceptie == lastCell:
     pyautogui.press("enter")
     pyautogui.press("f2")
     time.sleep(1)
-    # if nrCrotal[:3] == "RO2":
-    #    pyautogui.typewrite("10401")
-    # organeCapre = True
-    # else:
-    pyautogui.typewrite("10201")
-    # organeOi = True
+    if nrCrotal[:3] == "RO2":
+        pyautogui.typewrite("10401")
+    else:
+        pyautogui.typewrite("10201")
     pyautogui.press("enter")
     pyautogui.typewrite(nrCrotal)
     pyautogui.press("enter")
     pyautogui.press("enter")
-    # if nrCrotal[:3] == "RO2":
-    #    pyautogui.typewrite("F")
-    #    pyautogui.press("enter")
+    if nrCrotal[:3] == "RO2":
+        pyautogui.typewrite("F")
+        pyautogui.press("enter")
     if varsta == ">18LUNI":
         pyautogui.typewrite("18+")
     elif varsta == "<18LUNI":
@@ -270,11 +270,17 @@ else:
     pyautogui.press("enter")
     pyautogui.press("f2")
     time.sleep(1)
-    pyautogui.typewrite("10201")
+    if nrCrotal[0][:3] == "RO2":
+        pyautogui.typewrite("10401")
+    else:
+        pyautogui.typewrite("10201")
     pyautogui.press("enter")
     pyautogui.typewrite(nrCrotal[0])
     pyautogui.press("enter")
     pyautogui.press("enter")
+    if nrCrotal[0][:3] == "RO2":
+        pyautogui.typewrite("F")
+        pyautogui.press("enter")
     if varsta[0] == ">18LUNI":
         pyautogui.typewrite("18+")
     elif varsta[0] == "<18LUNI":
@@ -286,7 +292,7 @@ else:
     time.sleep(1)
     nrArticole = nrArticole + 1
     listaCrotale.append(nrCrotal[0])
-
+    crotalAnterior = nrCrotal[0][:3]
     propietarAnterior = wb.range("H" + str(nrReceptie)).value
 
     for i in range(1, len(propietar)):
@@ -312,8 +318,6 @@ else:
 
             pydirectinput.PAUSE = 0.03
 
-            crotaleSortate = sorted(listaCrotale)
-
             deschidereConsola("p03")
             # pp.VIF5_7.print_control_identifiers()
             pyautogui.press('b')
@@ -323,13 +327,30 @@ else:
             pyautogui.keyDown('ctrl')
             pyautogui.press('o')
             pyautogui.keyUp('ctrl')
-            pyautogui.typewrite("10201")
+            if nrCrotal[i][:3] == "RO2":
+                pyautogui.typewrite("10401")
+            else:
+                pyautogui.typewrite("10201")
             pyautogui.press("enter")
             pyautogui.typewrite(str(listaOF[0]))
             pyautogui.press("enter")
             pyautogui.press("f2")
 
+            crotalAnterior2 = listaCrotale[0][:3]
             for j in range(len(listaCrotale)):
+                if crotalAnterior2 != listaCrotale[j][:3]:
+                    pyautogui.keyDown('ctrl')
+                    listaOF.pop(0)
+                    pyautogui.press('o')
+                    pyautogui.keyUp('ctrl')
+                    if nrCrotal[j][:3] == "RO2":
+                        pyautogui.typewrite("10401")
+                    else:
+                            pyautogui.typewrite("10201")
+                    pyautogui.press("enter")
+                    pyautogui.typewrite(str(listaOF[0]))
+                    pyautogui.press("enter")
+                    pyautogui.press("f2")
                 pyautogui.press("enter")
                 pyautogui.typewrite(listaCrotale[j])
                 pydirectinput.press("enter")
@@ -373,11 +394,17 @@ else:
             pyautogui.press("enter")
             pyautogui.press("f2")
             time.sleep(1)
-            pyautogui.typewrite("10201")
+            if nrCrotal[i][:3] == "RO2":
+                pyautogui.typewrite("10401")
+            else:
+                pyautogui.typewrite("10201")
             pyautogui.press("enter")
             pyautogui.typewrite(nrCrotal[i])
             pyautogui.press("enter")
             pyautogui.press("enter")
+            if nrCrotal[0][:3] == "RO2":
+                pyautogui.typewrite("F")
+                pyautogui.press("enter")
             if varsta[i] == ">18LUNI":
                 pyautogui.typewrite("18+")
             elif varsta[i] == "<18LUNI":
@@ -388,10 +415,19 @@ else:
             pyautogui.press("f2")
             time.sleep(1)
             propietarAnterior = propietar[i]
-            nrArticole = nrArticole + 1
+            if nrCrotal[i][:3] != crotalAnterior:
+                nrArticole = nrArticole + 1
+                listaOF.append(nrArticole)
+                nrArticole = 0
+            else:
+                nrArticole = nrArticole + 1
             listaCrotale.append(nrCrotal[i])
+            crotalAnterior = nrCrotal[i][:3]
         else:
-            pyautogui.typewrite("10201")
+            if nrCrotal[i][:3] == "RO2":
+                pyautogui.typewrite("10401")
+            else:
+                pyautogui.typewrite("10201")
             pyautogui.press("enter")
             pyautogui.typewrite(nrCrotal[i])
             pyautogui.press("enter")
@@ -406,9 +442,16 @@ else:
             pyautogui.press("f2")
             time.sleep(2)
             propietarAnterior = propietar[i]
-            nrArticole = nrArticole + 1
+            if nrCrotal[i][:3] != crotalAnterior:
+                nrArticole = nrArticole + 1
+                listaOF.append(nrArticole)
+                nrArticole = 0
+            else:
+                nrArticole = nrArticole + 1
             listaCrotale.append(nrCrotal[i])
-    listaOF.append(nrArticole)
+            crotalAnterior = nrCrotal[i][:3]
+    if nrCrotal[i][:3] = crotalAnterior:
+        listaOF.append(nrArticole)
     pyautogui.press("f4")
     pyautogui.press("d")
     time.sleep(5)
@@ -427,8 +470,6 @@ pyautogui.press("enter")
 
 pydirectinput.PAUSE = 0.03
 
-crotaleSortate = sorted(listaCrotale)
-
 deschidereConsola("p03")
 # pp.VIF5_7.print_control_identifiers()
 pyautogui.press('b')
@@ -440,7 +481,10 @@ if nrReceptie == lastCell:
     pyautogui.keyDown('ctrl')
     pyautogui.press('o')
     pyautogui.keyUp('ctrl')
-    pyautogui.typewrite("10201")
+    if nrCrotal[i][:3] == "RO2":
+        pyautogui.typewrite("10401")
+    else:
+        pyautogui.typewrite("10201")
     pyautogui.press("enter")
     pyautogui.typewrite(str(1))
     pyautogui.press("enter")
@@ -455,12 +499,30 @@ else:
     pyautogui.keyDown('ctrl')
     pyautogui.press('o')
     pyautogui.keyUp('ctrl')
-    pyautogui.typewrite("10201")
+    if nrCrotal[i][:3] == "RO2":
+        pyautogui.typewrite("10401")
+    else:
+        pyautogui.typewrite("10201")
     pyautogui.press("enter")
     pyautogui.typewrite(str(listaOF[0]))
     pyautogui.press("enter")
     pyautogui.press("f2")
+    
+    crotalAnterior2 = listaCrotale[0][:3]
     for i in range(len(listaCrotale)):
+        if crotalAnterior2 != listaCrotale[j][:3]:
+            pyautogui.keyDown('ctrl')
+            listaOF.pop(0)
+            pyautogui.press('o')
+            pyautogui.keyUp('ctrl')
+            if nrCrotal[j][:3] == "RO2":
+                pyautogui.typewrite("10401")
+            else:
+                pyautogui.typewrite("10201")
+            pyautogui.press("enter")
+            pyautogui.typewrite(str(listaOF[0]))
+            pyautogui.press("enter")
+            pyautogui.press("f2")
         pyautogui.press("enter")
         pyautogui.typewrite(listaCrotale[i])
         pydirectinput.press("enter")
