@@ -9,10 +9,11 @@ from datetime import date
 import win32api, win32con
 import ctypes
 
-caleExcel = "C:\\Users\\CALITATE\\Desktop\\OVINA PUTTY.xls"
+caleExcel = "C:\\Users\\SSM\\Desktop\\OVINA PUTTY.xls"
 calePutty = "C:\\vifout\\Putty\\putty.exe"
 foaieCalculReceptii = 'Foaie1'
 foaieCalculAutomat = 'Date'
+
 
 # Functie deschidere consola putty
 
@@ -31,6 +32,7 @@ def deschidereConsola(postLucru):
     pyautogui.press("enter")
     time.sleep(1)
     pyautogui.press("enter", presses=4)
+
 
 pyautogui.FAILSAFE = False
 pydirectinput.FAILSAFE = False
@@ -72,7 +74,8 @@ if nrReceptie == lastCell:
         masina = wb.range("K" + str(nrReceptie)).value
     if wb.range("B" + str(nrReceptie)).value is None:
         wb.range("B" + str(nrReceptie)).color = (235, 52, 52)
-        ctypes.windll.user32.MessageBoxW(0, "Lipseste numarul de criteriu la pozitia:" + str(nrReceptie - 8), "Numar criteriu lipsa!", 0)
+        ctypes.windll.user32.MessageBoxW(0, "Lipseste numarul de criteriu la pozitia:" + str(nrReceptie - 8),
+                                         "Numar criteriu lipsa!", 0)
         sys.exit()
     else:
         nrCriteriu = wb.range("B" + str(nrReceptie)).value
@@ -105,7 +108,8 @@ if nrReceptie == lastCell:
         varsta = wb.range("G" + str(nrReceptie)).value
     if wb.range("M" + str(nrReceptie)).value is None:
         wb.range("M" + str(nrReceptie)).color = (235, 52, 52)
-        ctypes.windll.user32.MessageBoxW(0, "Lipseste numarul de pasaport la pozitia:" + str(nrReceptie - 8), "Numar pasaport lispa!", 0)
+        ctypes.windll.user32.MessageBoxW(0, "Lipseste numarul de pasaport la pozitia:" + str(nrReceptie - 8),
+                                         "Numar pasaport lispa!", 0)
         sys.exit()
     else:
         masina = wb.range("M" + str(nrReceptie)).value
@@ -236,9 +240,7 @@ if nrReceptie == lastCell:
     pyautogui.typewrite(nrCrotal)
     pyautogui.press("enter")
     pyautogui.press("enter")
-    if nrCrotal[:3] == "RO2":
-        pyautogui.typewrite("F")
-        pyautogui.press("enter")
+    pyautogui.press("enter")
     if varsta == ">18LUNI":
         pyautogui.typewrite("18+")
     elif varsta == "<18LUNI":
@@ -278,9 +280,7 @@ else:
     pyautogui.typewrite(nrCrotal[0])
     pyautogui.press("enter")
     pyautogui.press("enter")
-    if nrCrotal[0][:3] == "RO2":
-        pyautogui.typewrite("F")
-        pyautogui.press("enter")
+    pyautogui.press("enter")
     if varsta[0] == ">18LUNI":
         pyautogui.typewrite("18+")
     elif varsta[0] == "<18LUNI":
@@ -303,7 +303,7 @@ else:
             pyautogui.press("d")
             time.sleep(5)
             try:
-                app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+                app.VIF5_7.child_window(title="Close", control_type="Button").click()
             except:
                 ctypes.windll.user32.MessageBoxW(0,
                                                  "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
@@ -314,7 +314,7 @@ else:
             # Salvare nr criteriu in sheet-ul de date in cazul in care conexiunea la server este intrerupta
             xw.Book(caleExcel).sheets[foaieCalculAutomat].range("G3").value = nrCriteriu[i] + 1
 
-            #Deschidere post 3
+            # Deschidere post 3
 
             pydirectinput.PAUSE = 0.03
 
@@ -327,7 +327,7 @@ else:
             pyautogui.keyDown('ctrl')
             pyautogui.press('o')
             pyautogui.keyUp('ctrl')
-            if nrCrotal[i][:3] == "RO2":
+            if listaCrotale[0][:3] == "RO2":
                 pyautogui.typewrite("10401")
             else:
                 pyautogui.typewrite("10201")
@@ -339,28 +339,31 @@ else:
             crotalAnterior2 = listaCrotale[0][:3]
             for j in range(len(listaCrotale)):
                 if crotalAnterior2 != listaCrotale[j][:3]:
-                    pyautogui.keyDown('ctrl')
                     listaOF.pop(0)
+                    pyautogui.keyDown('ctrl')
                     pyautogui.press('o')
                     pyautogui.keyUp('ctrl')
                     if nrCrotal[j][:3] == "RO2":
                         pyautogui.typewrite("10401")
                     else:
-                            pyautogui.typewrite("10201")
+                        pyautogui.typewrite("10201")
                     pyautogui.press("enter")
                     pyautogui.typewrite(str(listaOF[0]))
                     pyautogui.press("enter")
                     pyautogui.press("f2")
+                    crotalAnterior2 = listaCrotale[j][:3]
                 pyautogui.press("enter")
                 pyautogui.typewrite(listaCrotale[j])
                 pydirectinput.press("enter")
+                if listaCrotale[j][:3] == "RO2":
+                    pydirectinput.press("d")
                 pydirectinput.press("f2")
                 time.sleep(1)
             listaCrotale.clear()
             listaOF.pop(0)
 
             try:
-                app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+                app.VIF5_7.child_window(title="Close", control_type="Button").click()
             except:
                 ctypes.windll.user32.MessageBoxW(0,
                                                  "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
@@ -402,9 +405,7 @@ else:
             pyautogui.typewrite(nrCrotal[i])
             pyautogui.press("enter")
             pyautogui.press("enter")
-            if nrCrotal[0][:3] == "RO2":
-                pyautogui.typewrite("F")
-                pyautogui.press("enter")
+            pyautogui.press("enter")
             if varsta[i] == ">18LUNI":
                 pyautogui.typewrite("18+")
             elif varsta[i] == "<18LUNI":
@@ -416,9 +417,9 @@ else:
             time.sleep(1)
             propietarAnterior = propietar[i]
             if nrCrotal[i][:3] != crotalAnterior:
-                nrArticole = nrArticole + 1
                 listaOF.append(nrArticole)
                 nrArticole = 0
+                nrArticole = nrArticole + 1
             else:
                 nrArticole = nrArticole + 1
             listaCrotale.append(nrCrotal[i])
@@ -432,6 +433,7 @@ else:
             pyautogui.typewrite(nrCrotal[i])
             pyautogui.press("enter")
             pyautogui.press("enter")
+            pyautogui.press("enter")
             if varsta[i] == ">18LUNI":
                 pyautogui.typewrite("18+")
             elif varsta[i] == "<18LUNI":
@@ -443,26 +445,28 @@ else:
             time.sleep(2)
             propietarAnterior = propietar[i]
             if nrCrotal[i][:3] != crotalAnterior:
-                nrArticole = nrArticole + 1
                 listaOF.append(nrArticole)
                 nrArticole = 0
+                nrArticole = nrArticole + 1
             else:
                 nrArticole = nrArticole + 1
             listaCrotale.append(nrCrotal[i])
             crotalAnterior = nrCrotal[i][:3]
-    if nrCrotal[i][:3] = crotalAnterior:
+    if nrCrotal[i][:3] == crotalAnterior:
         listaOF.append(nrArticole)
     pyautogui.press("f4")
     pyautogui.press("d")
     time.sleep(5)
 
-#Memorare in excel urmatoarea introducere
+# Memorare in excel urmatoarea introducere
 xw.Book(caleExcel).sheets[foaieCalculAutomat].range("G3").value = lastCell - 7
 
 try:
-    app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+    app.VIF5_7.child_window(title="Close", control_type="Button").click()
 except:
-    ctypes.windll.user32.MessageBoxW(0, "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif", "Eroare la inchidrea consolei!", 0)
+    ctypes.windll.user32.MessageBoxW(0,
+                                     "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
+                                     "Eroare la inchidrea consolei!", 0)
     sys.exit()
 pyautogui.press("enter")
 
@@ -476,12 +480,11 @@ pyautogui.press('b')
 pyautogui.press('e')
 time.sleep(1)
 
-
 if nrReceptie == lastCell:
     pyautogui.keyDown('ctrl')
     pyautogui.press('o')
     pyautogui.keyUp('ctrl')
-    if nrCrotal[i][:3] == "RO2":
+    if nrCrotal == "RO2":
         pyautogui.typewrite("10401")
     else:
         pyautogui.typewrite("10201")
@@ -499,7 +502,7 @@ else:
     pyautogui.keyDown('ctrl')
     pyautogui.press('o')
     pyautogui.keyUp('ctrl')
-    if nrCrotal[i][:3] == "RO2":
+    if listaCrotale[0][:3] == "RO2":
         pyautogui.typewrite("10401")
     else:
         pyautogui.typewrite("10201")
@@ -507,15 +510,16 @@ else:
     pyautogui.typewrite(str(listaOF[0]))
     pyautogui.press("enter")
     pyautogui.press("f2")
-    
+
     crotalAnterior2 = listaCrotale[0][:3]
     for i in range(len(listaCrotale)):
-        if crotalAnterior2 != listaCrotale[j][:3]:
+        if crotalAnterior2 != listaCrotale[i][:3]:
             pyautogui.keyDown('ctrl')
             listaOF.pop(0)
             pyautogui.press('o')
             pyautogui.keyUp('ctrl')
-            if nrCrotal[j][:3] == "RO2":
+            time.sleep(1)
+            if listaCrotale[j][:3] == "RO2":
                 pyautogui.typewrite("10401")
             else:
                 pyautogui.typewrite("10201")
@@ -523,16 +527,22 @@ else:
             pyautogui.typewrite(str(listaOF[0]))
             pyautogui.press("enter")
             pyautogui.press("f2")
+            crotalAnterior2 = listaCrotale[i][:3]
         pyautogui.press("enter")
         pyautogui.typewrite(listaCrotale[i])
         pydirectinput.press("enter")
+        if listaCrotale[i][:3] == "RO2":
+            pydirectinput.press("d")
         pydirectinput.press("f2")
         time.sleep(1)
 
+
 try:
-    app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+    app.VIF5_7.child_window(title="Close", control_type="Button").click()
 except:
-    ctypes.windll.user32.MessageBoxW(0, "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif", "Eroare la inchidrea consolei!", 0)
+    ctypes.windll.user32.MessageBoxW(0,
+                                     "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
+                                     "Eroare la inchidrea consolei!", 0)
     sys.exit()
 pyautogui.press("enter")
 
