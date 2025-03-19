@@ -9,7 +9,7 @@ from datetime import date
 import win32api, win32con
 import ctypes
 
-caleExcel = "C:\\Users\\CALITATE\\Desktop\\OVINA PUTTY.xls"
+caleExcel = "C:\\Users\\SSM\\Desktop\\OVINA PUTTY.xls"
 calePutty = "C:\\vifout\\Putty\\putty.exe"
 foaieCalculReceptii = 'Foaie1'
 foaieCalculAutomat = 'Date'
@@ -297,14 +297,14 @@ else:
     propietarAnterior = wb.range("H" + str(nrReceptie)).value
 
     for i in range(1, len(propietar)):
-        if propietarAnterior != propietar[i]:
+        if propietarAnterior != propietar[i] or crotalAnterior != nrCrotal[i][:3]:
             listaOF.append(nrArticole)
             nrArticole = 0
             pyautogui.press("f4")
             pyautogui.press("d")
             time.sleep(5)
             try:
-                app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+                app.VIF5_7.child_window(title="Close", control_type="Button").click()
             except:
                 ctypes.windll.user32.MessageBoxW(0,
                                                  "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
@@ -364,7 +364,7 @@ else:
             listaOF.pop(0)
 
             try:
-                app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+                app.VIF5_7.child_window(title="Close", control_type="Button").click()
             except:
                 ctypes.windll.user32.MessageBoxW(0,
                                                  "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
@@ -419,6 +419,7 @@ else:
             propietarAnterior = propietar[i]
             nrArticole = nrArticole + 1
             listaCrotale.append(nrCrotal[i])
+            crotalAnterior = nrCrotal[i][:3]
         else:
             if nrCrotal[i][:3] == "RO2":
                 pyautogui.typewrite("10401")
@@ -439,16 +440,9 @@ else:
             pyautogui.press("f2")
             time.sleep(2)
             propietarAnterior = propietar[i]
-            if nrCrotal[i][:3] != crotalAnterior and propietarAnterior != propietar[i]:
-                listaOF.append(nrArticole)
-                nrArticole = 0
-                nrArticole = nrArticole + 1
-            else:
-                nrArticole = nrArticole + 1
+            nrArticole = nrArticole + 1
             listaCrotale.append(nrCrotal[i])
             crotalAnterior = nrCrotal[i][:3]
-    if nrCrotal[i][:3] == crotalAnterior:
-        listaOF.append(nrArticole)
     pyautogui.press("f4")
     pyautogui.press("d")
     time.sleep(5)
@@ -457,7 +451,7 @@ else:
 xw.Book(caleExcel).sheets[foaieCalculAutomat].range("G3").value = lastCell - 7
 
 try:
-    app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+    app.VIF5_7.child_window(title="Close", control_type="Button").click()
 except:
     ctypes.windll.user32.MessageBoxW(0,
                                      "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
@@ -494,6 +488,7 @@ if nrReceptie == lastCell:
     pydirectinput.press("f2")
     time.sleep(1)
 else:
+    listaOF.append(nrArticole)
     pyautogui.keyDown('ctrl')
     pyautogui.press('o')
     pyautogui.keyUp('ctrl')
@@ -533,7 +528,7 @@ else:
 
 
 try:
-    app.VIF5_7.child_window(title="Închidere", control_type="Button").click()
+    app.VIF5_7.child_window(title="Close", control_type="Button").click()
 except:
     ctypes.windll.user32.MessageBoxW(0,
                                      "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
