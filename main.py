@@ -13,7 +13,7 @@ caleExcel = "C:\\Users\\SSM\\Desktop\\OVINA PUTTY.xls"
 calePutty = "C:\\vifout\\Putty\\putty.exe"
 foaieCalculReceptii = 'Foaie1'
 foaieCalculAutomat = 'Date'
-
+denumireButonInchidere = 'Close'
 
 # Functie deschidere consola putty
 
@@ -326,7 +326,7 @@ else:
             pyautogui.press("d")
             time.sleep(5)
             try:
-                app.VIF5_7.child_window(title="Close", control_type="Button").click()
+                app.VIF5_7.child_window(title=denumireButonInchidere, control_type="Button").click()
             except:
                 ctypes.windll.user32.MessageBoxW(0,
                                                  "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
@@ -395,7 +395,7 @@ else:
             listaOF.pop(0)
 
             try:
-                app.VIF5_7.child_window(title="Close", control_type="Button").click()
+                app.VIF5_7.child_window(title=denumireButonInchidere, control_type="Button").click()
             except:
                 ctypes.windll.user32.MessageBoxW(0,
                                                  "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
@@ -489,7 +489,7 @@ else:
 xw.Book(caleExcel).sheets[foaieCalculAutomat].range("G3").value = lastCell - 7
 
 try:
-    app.VIF5_7.child_window(title="Close", control_type="Button").click()
+    app.VIF5_7.child_window(title=denumireButonInchidere, control_type="Button").click()
 except:
     ctypes.windll.user32.MessageBoxW(0,
                                      "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
@@ -572,7 +572,7 @@ else:
 
 
 try:
-    app.VIF5_7.child_window(title="Close", control_type="Button").click()
+    app.VIF5_7.child_window(title=denumireButonInchidere, control_type="Button").click()
 except:
     ctypes.windll.user32.MessageBoxW(0,
                                      "Nu sa putut inchide consola putty, te rog sa repornesti programul sau sa verifici conecxiunea cu serverul vif",
