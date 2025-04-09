@@ -192,9 +192,14 @@ listaOF = [
 ]
 listaCrotale = [
 ]
+listaVarsta = [
+]
 nrArticole = 0
+varstaAnterioara = ""
 crotalAnterior = ""
 crotalAnterior2 = ""
+esteMiel1 = True
+esteMiel2 = True
 
 # Se va apasa tasta capslock daca este on
 
@@ -235,6 +240,8 @@ if nrReceptie == lastCell:
     time.sleep(1)
     if nrCrotal[:3] == "RO2":
         pyautogui.typewrite("10401")
+    elif varsta == "<12LUNI":
+        pyautogui.typewrite("10901")
     else:
         pyautogui.typewrite("10201")
     pyautogui.press("enter")
@@ -275,6 +282,8 @@ else:
     time.sleep(1)
     if nrCrotal[0][:3] == "RO2":
         pyautogui.typewrite("10401")
+    elif varsta[0] == "<12LUNI":
+        pyautogui.typewrite("10901")
     else:
         pyautogui.typewrite("10201")
     pyautogui.press("enter")
@@ -284,20 +293,33 @@ else:
     pyautogui.press("enter")
     if varsta[0] == ">18LUNI":
         pyautogui.typewrite("18+")
+        esteMiel1 = False
     elif varsta[0] == "<18LUNI":
         pyautogui.typewrite("12-18")
+        esteMiel1 = False
     else:
         pyautogui.typewrite("<12")
+        esteMiel1 = True
     pyautogui.press("enter")
     pyautogui.press("f2")
     time.sleep(1)
     nrArticole = nrArticole + 1
     listaCrotale.append(nrCrotal[0])
+    listaVarsta.append(varsta[0])
     crotalAnterior = nrCrotal[0][:3]
+    varstaAnterioara = wb.range("G" + str(nrReceptie)).value
     propietarAnterior = wb.range("H" + str(nrReceptie)).value
 
     for i in range(1, len(propietar)):
-        if propietarAnterior != propietar[i] or crotalAnterior != nrCrotal[i][:3]:
+        # Verificare daca varsta actuala este Miel sau nu
+        if varsta[i] == "<12LUNI":
+            esteMiel2 = True
+        else:
+            esteMiel2 = False
+
+        # Daca propietarul anterior, numarul de crotal anterior sau varsta anterioara nu coincid cu cea actuala
+        # se va incheia receptia si se crea Ordin de Fabricatie
+        if propietarAnterior != propietar[i] or crotalAnterior != nrCrotal[i][:3] or esteMiel1 != esteMiel2 :
             listaOF.append(nrArticole)
             nrArticole = 0
             pyautogui.press("f4")
@@ -330,15 +352,21 @@ else:
             pyautogui.keyUp('ctrl')
             if listaCrotale[0][:3] == "RO2":
                 pyautogui.typewrite("10401")
+            elif listaVarsta[0] == "<12LUNI":
+                pyautogui.typewrite("10901")
             else:
                 pyautogui.typewrite("10201")
             pyautogui.press("enter")
+            #Introducerea nurarului de bucati
             pyautogui.typewrite(str(listaOF[0]))
             pyautogui.press("enter")
             pyautogui.press("f2")
 
             crotalAnterior2 = listaCrotale[0][:3]
+            #Introducerea numerelor de crotal
             for j in range(len(listaCrotale)):
+                # Acest if se executa in cazul in care crotalul trece de la ovina la caprina sau viceversa
+                # atata timp cand lista de crotale inca nu sa terminat
                 if crotalAnterior2 != listaCrotale[j][:3]:
                     listaOF.pop(0)
                     pyautogui.keyDown('ctrl')
@@ -346,6 +374,8 @@ else:
                     pyautogui.keyUp('ctrl')
                     if nrCrotal[j][:3] == "RO2":
                         pyautogui.typewrite("10401")
+                    elif varsta[j] == "<12LUNI":
+                        pyautogui.typewrite("10901")
                     else:
                         pyautogui.typewrite("10201")
                     pyautogui.press("enter")
@@ -361,6 +391,7 @@ else:
                 pydirectinput.press("f2")
                 time.sleep(1)
             listaCrotale.clear()
+            listaVarsta.clear()
             listaOF.pop(0)
 
             try:
@@ -400,6 +431,8 @@ else:
             time.sleep(1)
             if nrCrotal[i][:3] == "RO2":
                 pyautogui.typewrite("10401")
+            elif varsta[i] == "<12LUNI":
+                pyautogui.typewrite("10901")
             else:
                 pyautogui.typewrite("10201")
             pyautogui.press("enter")
@@ -419,10 +452,14 @@ else:
             propietarAnterior = propietar[i]
             nrArticole = nrArticole + 1
             listaCrotale.append(nrCrotal[i])
+            listaVarsta.append(varsta[i])
             crotalAnterior = nrCrotal[i][:3]
+            esteMiel1 = esteMiel2
         else:
             if nrCrotal[i][:3] == "RO2":
                 pyautogui.typewrite("10401")
+            elif varsta[i] == "<12LUNI":
+                pyautogui.typewrite("10901")
             else:
                 pyautogui.typewrite("10201")
             pyautogui.press("enter")
@@ -442,6 +479,7 @@ else:
             propietarAnterior = propietar[i]
             nrArticole = nrArticole + 1
             listaCrotale.append(nrCrotal[i])
+            listaVarsta.append(varsta[i])
             crotalAnterior = nrCrotal[i][:3]
     pyautogui.press("f4")
     pyautogui.press("d")
@@ -475,6 +513,8 @@ if nrReceptie == lastCell:
     pyautogui.keyUp('ctrl')
     if nrCrotal == "RO2":
         pyautogui.typewrite("10401")
+    elif varsta == "<12LUNI":
+        pyautogui.typewrite("10901")
     else:
         pyautogui.typewrite("10201")
     pyautogui.press("enter")
@@ -494,6 +534,8 @@ else:
     pyautogui.keyUp('ctrl')
     if listaCrotale[0][:3] == "RO2":
         pyautogui.typewrite("10401")
+    elif listaVarsta[0] == "<12LUNI":
+        pyautogui.typewrite("10901")
     else:
         pyautogui.typewrite("10201")
     pyautogui.press("enter")
@@ -511,6 +553,8 @@ else:
             time.sleep(1)
             if listaCrotale[i][:3] == "RO2":
                 pyautogui.typewrite("10401")
+            elif listaVarsta[i] == "<12LUNI":
+                pyautogui.typewrite("10901")
             else:
                 pyautogui.typewrite("10201")
             pyautogui.press("enter")
