@@ -48,21 +48,9 @@ except:
 # Extragere date din excel
 
 wb = xw.Book(caleExcel).sheets[foaieCalculReceptii]
-today = date.today()
-formatted_date = today.strftime('%m.%d.%Y')
-if xw.Book(caleExcel).sheets[foaieCalculAutomat].range("I9").value != formatted_date:
-    # xw.Book("C:\\Users\\CALITATE\\Desktop\\OVINA PUTTY.xls").sheets['Date'].range("F7").value = "NU"
-    # xw.Book("C:\\Users\\CALITATE\\Desktop\\OVINA PUTTY.xls").sheets['Date'].range("F9").value = "NU"
-    xw.Book(caleExcel).sheets[foaieCalculAutomat].range("I9").value = formatted_date
-    xw.Book(caleExcel).sheets[foaieCalculAutomat].range("G3").value = ""
 
 lastCell = wb.range('E' + str(wb.cells.last_cell.row)).end('up').row
-nrReceptie = 0
-if xw.Book(caleExcel).sheets[foaieCalculAutomat].range("G3").value is None:
-    nrReceptie = 9
-else:
-    nrReceptie = int(xw.Book(caleExcel).sheets['Date'].range("G3").value)
-    nrReceptie = nrReceptie + 8
+nrReceptie = 9
 
 if nrReceptie == lastCell:
     nrCrotal = wb.range("E" + str(nrReceptie)).value
