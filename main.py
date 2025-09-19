@@ -7,13 +7,39 @@ from xlwings import Range, constants
 import pydirectinput
 from datetime import date
 import win32api, win32con
-import ctypes
+import ctypes, sys
+from pathlib import Path
+import locale
 
-caleExcel = "C:\\Users\\CALITATE\\Desktop\\OVINA PUTTY.xls"
-calePutty = "C:\\vifout\\Putty\\putty.exe"
-foaieCalculReceptii = 'Foaie1'
-foaieCalculAutomat = 'Date'
-denumireButonInchidere = 'Închidere'
+# Detectare limba setata pe calculator
+windll = ctypes.windll.kernel32
+windll.GetUserDefaultUILanguage()
+if locale.windows_locale[ windll.GetUserDefaultUILanguage() ] == "en_US":
+    denumireButonInchidere = "Close"
+else:
+    denumireButonInchidere = "Închidere"
+
+# script_dir = str(Path(__file__).parent)
+
+# Citire datele de import dintrun fisier si atribuirea pe variabile
+
+# f = open(script_dir + "\\data\\settings.txt", "r")
+
+# Calea relativa catre fisierul settings din folderul data
+
+f = open("data\\settings.txt", "r")
+
+lines = f.readlines()
+
+f.close()
+
+for i in range (len(lines)):
+    lines[i] = lines[i].replace("\n","")
+
+caleExcel = lines[0]
+calePutty = lines[1]
+foaieCalculReceptii = lines[2]
+foaieCalculAutomat = lines[3]
 
 # Functie deschidere consola putty
 
@@ -125,37 +151,39 @@ else:
             ctypes.windll.user32.MessageBoxW(0, "Lipseste numarul de criteriu la pozitia:" + str(i + nrReceptie - 8),
                                              "Numar criteriu lipsa!", 0)
             sys.exit()
+    # Conversie a numarului de criteriu in numar intreg
+    nrCriteriu = [int(nrCriteriu) for nrCriteriu in nrCriteriu]
+
     for i in range(len(propietar)):
         if propietar[i] is None:
             wb.range("H" + str(nrReceptie + i)).color = (235, 52, 52)
-            ctypes.windll.user32.MessageBoxW(0, "Lipseste propietarul la pozitia:" + str(i + nrReceptie - 8),
+            ctypes.windll.user32.MessageBoxW(0, "Lipseste propietarul la pozitia:" + str(nrCriteriu[i]),
                                              "Propietar lipsa!", 0)
             sys.exit()
     for i in range(len(codExploatatie)):
         if codExploatatie[i] is None:
             wb.range("J" + str(nrReceptie + i)).color = (235, 52, 52)
-            ctypes.windll.user32.MessageBoxW(0, "Lipseste codul de exploatatie la pozitia:" + str(i + nrReceptie - 8),
+            ctypes.windll.user32.MessageBoxW(0, "Lipseste codul de exploatatie la pozitia:" + str(nrCriteriu[i]),
                                              "Cod exp lipsa!", 0)
             sys.exit()
     for i in range(len(localitate)):
         if localitate[i] is None:
             wb.range("I" + str(nrReceptie + i)).color = (235, 52, 52)
-            ctypes.windll.user32.MessageBoxW(0, "Lipseste localitatea la pozitia:" + str(i + nrReceptie - 8),
+            ctypes.windll.user32.MessageBoxW(0, "Lipseste localitatea la pozitia:" + str(nrCriteriu[i]),
                                              "Localitate lipsa!", 0)
             sys.exit()
     for i in range(len(varsta)):
         if varsta[i] is None:
             wb.range("G" + str(nrReceptie + i)).color = (235, 52, 52)
-            ctypes.windll.user32.MessageBoxW(0, "Lipseste varsta la pozitia:" + str(i + nrReceptie - 8),
+            ctypes.windll.user32.MessageBoxW(0, "Lipseste varsta la pozitia:" + str(nrCriteriu[i]),
                                              "Varsta lipsa!", 0)
             sys.exit()
     for i in range(len(nrPasaport)):
         if nrPasaport[i] is None:
             wb.range("M" + str(nrReceptie + i)).color = (235, 52, 52)
-            ctypes.windll.user32.MessageBoxW(0, "Lipseste numarul de pasaport la pozitia:" + str(i + nrReceptie - 8),
+            ctypes.windll.user32.MessageBoxW(0, "Lipseste numarul de pasaport la pozitia:" + str(nrCriteriu[i]),
                                              "Numar de pasaport lipsa!", 0)
             sys.exit()
-    nrCriteriu = [int(nrCriteriu) for nrCriteriu in nrCriteriu]
 doctor = int(xw.Book(caleExcel).sheets[foaieCalculAutomat].range("E2").value)
 # organeCapre = False
 # organeOi = False
@@ -168,8 +196,8 @@ for i in range(lastCell - 8):
         if i == j:
             pass
         elif verificareCrotal[i] == verificareCrotal[j]:
-            ctypes.windll.user32.MessageBoxW(0, "Crotalul " + verificareCrotal[i] + " este duplicat la pozitia " +
-                                             nrCriteriu[i] + " si pozitia " + nrCriteriu[j],
+            ctypes.windll.user32.MessageBoxW(0, "Crotalul " + str(nrCrotal[i]) + " este duplicat la pozitia " +
+                                             str(nrCriteriu[i]) + " si pozitia " + str(nrCriteriu[j]),
                                              "Crotal duplicat", 0)
             sys.exit()
 
