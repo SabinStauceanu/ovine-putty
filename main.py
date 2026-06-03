@@ -272,6 +272,8 @@ if nrReceptie == lastCell:
     else:
         pyautogui.typewrite("<12")
     pyautogui.press("enter")
+    pyautogui.typewrite("RO")
+    pyautogui.press("enter")
     pyautogui.press("f2")
     time.sleep(1)
     pyautogui.press("f4")
@@ -316,6 +318,8 @@ else:
     else:
         pyautogui.typewrite("<12")
         esteMiel1 = True
+    pyautogui.press("enter")
+    pyautogui.typewrite("RO")
     pyautogui.press("enter")
     pyautogui.press("f2")
     time.sleep(1)
@@ -463,6 +467,8 @@ else:
             else:
                 pyautogui.typewrite("<12")
             pyautogui.press("enter")
+            pyautogui.typewrite("RO")
+            pyautogui.press("enter")
             pyautogui.press("f2")
             time.sleep(1)
             propietarAnterior = propietar[i]
@@ -489,6 +495,8 @@ else:
                 pyautogui.typewrite("12-18")
             else:
                 pyautogui.typewrite("<12")
+            pyautogui.press("enter")
+            pyautogui.typewrite("RO")
             pyautogui.press("enter")
             pyautogui.press("f2")
             time.sleep(2)
